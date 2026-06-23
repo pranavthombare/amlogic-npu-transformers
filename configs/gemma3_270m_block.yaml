@@ -1,0 +1,39 @@
+model:
+  id: google/gemma-3-270m-it
+  revision: main
+  layer_index: 0
+  onnx_opset: 17
+  torch_dtype: float32
+
+target:
+  board: VIM3
+  os: khadas-ubuntu-bsp
+  sdk_env: AML_NPU_SDK
+
+artifacts:
+  root: artifacts/gemma3_270m/block0
+  manifest_name: artifact_manifest.json
+
+graphs:
+  - name: prefill
+    sequence_length: 64
+    batch_size: 1
+  - name: decode
+    sequence_length: 1
+    batch_size: 1
+
+acuity:
+  platform: onnx
+  quantized_dtype: dynamic_fixed_point
+  qtype: int8
+  print_level: 1
+  # Acuity argument support varies by DDK release. Keep extra_args explicit so
+  # board-specific flags can be added without changing the wrapper.
+  extra_args: []
+
+runtime:
+  adapter_library: libgemma_aml_adapter.so
+  atol: 0.08
+  rtol: 0.08
+  min_cosine_similarity: 0.98
+

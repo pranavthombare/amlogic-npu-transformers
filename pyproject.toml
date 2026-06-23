@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vim3-gemma-npu"
+version = "0.1.0"
+description = "Amlogic NPU inference pipeline for Gemma 3 270M on Khadas VIM3"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+export = [
+  "numpy>=1.24",
+  "onnx>=1.16",
+  "torch>=2.3",
+  "transformers>=4.51",
+]
+serve = [
+  "fastapi>=0.111",
+  "uvicorn>=0.30",
+]
+
+[project.scripts]
+gemma-npu-export-block = "gemma_npu.export_block:main"
+gemma-npu-convert-acuity = "gemma_npu.convert_acuity:main"
+gemma-npu-server = "gemma_npu.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
