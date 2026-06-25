@@ -143,32 +143,32 @@ std::vector<TensorRef> extract_tensor_refs(const std::string& graph_object, cons
 
 int dtype_from_npy_descr(const std::string& descr) {
   if (descr == "<f4" || descr == "|f4") {
-    return GEMMA_DTYPE_F32;
+    return AML_TRANSFORMERS_DTYPE_F32;
   }
   if (descr == "<i8" || descr == "|i8") {
-    return GEMMA_DTYPE_I64;
+    return AML_TRANSFORMERS_DTYPE_I64;
   }
   if (descr == "<i4" || descr == "|i4") {
-    return GEMMA_DTYPE_I32;
+    return AML_TRANSFORMERS_DTYPE_I32;
   }
   if (descr == "|u1") {
-    return GEMMA_DTYPE_U8;
+    return AML_TRANSFORMERS_DTYPE_U8;
   }
   if (descr == "|i1") {
-    return GEMMA_DTYPE_I8;
+    return AML_TRANSFORMERS_DTYPE_I8;
   }
   throw std::runtime_error("unsupported npy dtype descriptor: " + descr);
 }
 
 size_t dtype_size(int dtype) {
   switch (dtype) {
-    case GEMMA_DTYPE_F32:
-    case GEMMA_DTYPE_I32:
+    case AML_TRANSFORMERS_DTYPE_F32:
+    case AML_TRANSFORMERS_DTYPE_I32:
       return 4;
-    case GEMMA_DTYPE_I64:
+    case AML_TRANSFORMERS_DTYPE_I64:
       return 8;
-    case GEMMA_DTYPE_U8:
-    case GEMMA_DTYPE_I8:
+    case AML_TRANSFORMERS_DTYPE_U8:
+    case AML_TRANSFORMERS_DTYPE_I8:
       return 1;
     default:
       throw std::runtime_error("unsupported dtype");
@@ -275,7 +275,7 @@ LoadedTensor load_npy_tensor(const std::string& name, const std::string& path) {
 }
 
 CompareResult compare_f32(const LoadedTensor& expected, const LoadedTensor& actual) {
-  if (expected.dtype != GEMMA_DTYPE_F32 || actual.dtype != GEMMA_DTYPE_F32) {
+  if (expected.dtype != AML_TRANSFORMERS_DTYPE_F32 || actual.dtype != AML_TRANSFORMERS_DTYPE_F32) {
     throw std::runtime_error("compare_f32 requires float32 tensors");
   }
   if (expected.bytes.size() != actual.bytes.size()) {
@@ -307,11 +307,11 @@ CompareResult compare_f32(const LoadedTensor& expected, const LoadedTensor& actu
   return CompareResult{max_abs, max_rel, denom > 0.0 ? dot / denom : 0.0};
 }
 
-GemmaTensor as_abi_tensor(LoadedTensor& tensor) {
+AmlogicTransformersTensor as_abi_tensor(LoadedTensor& tensor) {
   if (tensor.shape.size() > 8) {
     throw std::runtime_error("rank > 8 is not supported by adapter ABI");
   }
-  GemmaTensor abi{};
+  AmlogicTransformersTensor abi{};
   abi.name = tensor.name.c_str();
   abi.dtype = tensor.dtype;
   abi.rank = static_cast<int>(tensor.shape.size());
@@ -322,4 +322,3 @@ GemmaTensor as_abi_tensor(LoadedTensor& tensor) {
   abi.byte_size = tensor.bytes.size();
   return abi;
 }
-

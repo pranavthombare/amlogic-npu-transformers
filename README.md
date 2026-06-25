@@ -1,4 +1,4 @@
-# VIM3 Gemma NPU Inference
+# Amlogic NPU Transformers Inference
 
 Amlogic NPU inference pipeline for `google/gemma-3-270m-it` on Khadas VIM3.
 This is intentionally not a `llama.cpp`, GGUF, or CPU fallback stack.
@@ -23,7 +23,7 @@ Working locally:
 Still requires the board and SDK:
 
 - Running Acuity conversion against exported Gemma ONNX graphs.
-- Implementing the real `libgemma_aml_adapter.so` around generated Amlogic code.
+- Implementing the real `libamlogic_transformers_adapter.so` around generated Amlogic code.
 - Passing numerical checks on VIM3 NPU output.
 - Enabling token generation beyond the one-block milestone.
 
@@ -41,7 +41,7 @@ Still requires the board and SDK:
 - `scripts/export_gemma_block.py` - exports fixed-shape decoder-block ONNX files and reference tensors.
 - `scripts/convert_acuity.py` - wraps Amlogic Acuity conversion and updates artifact manifests.
 - `scripts/make_runtime_fixture.py` - generates a tiny local fixture for CI/runtime smoke tests.
-- `src/gemma_npu/` - Python package for config, manifests, export, conversion, and serving.
+- `src/amlogic_transformers/` - Python package for config, manifests, export, conversion, and serving.
 - `runtime/` - C++ block runner, adapter ABI, and adapter implementations.
 - `.github/workflows/ci.yml` - GitHub Actions workflow running the local test path.
 
@@ -51,7 +51,7 @@ This path does not need Hugging Face credentials or the Amlogic SDK. It proves
 the repo builds and the runtime ABI works.
 
 ```sh
-cd /home/pranavthombare/vim3-gemma-npu
+cd /home/pranavthombare/amlogic-npu-transformers
 make test
 ```
 
@@ -64,7 +64,7 @@ hidden_states_out max_abs=0 max_rel=0 cosine=1
 ## Development Setup
 
 ```sh
-cd /home/pranavthombare/vim3-gemma-npu
+cd /home/pranavthombare/amlogic-npu-transformers
 python3 -m venv .venv
 . .venv/bin/activate
 pip install -e '.[export,serve]'
@@ -112,16 +112,16 @@ cmake --build runtime/build
 Run the harness against a generated adapter:
 
 ```sh
-build/local/gemma-npu-block-runner \
+build/local/amlogic-transformers-block-runner \
   --manifest artifacts/gemma3_270m/block0/artifact_manifest.json \
   --graph prefill \
-  --adapter /path/to/libgemma_aml_adapter.so
+  --adapter /path/to/libamlogic_transformers_adapter.so
 ```
 
 Start the API shell:
 
 ```sh
-gemma-npu-server
+amlogic-transformers-server
 ```
 
 The chat endpoint returns `503` until converted NPU artifacts exist, and `501`

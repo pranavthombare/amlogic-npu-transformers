@@ -11,7 +11,7 @@ try:
 except ImportError as exc:  # pragma: no cover
     raise RuntimeError("install serving dependencies: pip install -e '.[serve]'") from exc
 
-from gemma_npu.manifest import ArtifactManifest, load_manifest
+from amlogic_transformers.manifest import ArtifactManifest, load_manifest
 
 
 MODEL_ID = "google/gemma-3-270m-it"
@@ -41,7 +41,7 @@ class HealthResponse(BaseModel):
 
 
 def _manifest_path() -> Path:
-    return Path(os.environ.get("GEMMA_NPU_MANIFEST", str(DEFAULT_MANIFEST)))
+    return Path(os.environ.get("AMLOGIC_TRANSFORMERS_MANIFEST", str(DEFAULT_MANIFEST)))
 
 
 def _load_manifest_or_none() -> ArtifactManifest | None:
@@ -81,7 +81,7 @@ def _readiness() -> HealthResponse:
     )
 
 
-app = FastAPI(title="VIM3 Gemma NPU", version="0.1.0")
+app = FastAPI(title="Amlogic NPU Transformers", version="0.1.0")
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -135,7 +135,7 @@ def openai_error_response(message: str, status: int = 500) -> dict[str, Any]:
     return {
         "error": {
             "message": message,
-            "type": "vim3_gemma_npu_error",
+            "type": "amlogic_transformers_error",
             "code": status,
             "timestamp": int(time.time()),
         }
@@ -148,6 +148,6 @@ def main() -> None:
     except ImportError as exc:  # pragma: no cover
         raise RuntimeError("install serving dependencies: pip install -e '.[serve]'") from exc
 
-    host = os.environ.get("GEMMA_NPU_HOST", "0.0.0.0")
-    port = int(os.environ.get("GEMMA_NPU_PORT", "8080"))
-    uvicorn.run("gemma_npu.server:app", host=host, port=port)
+    host = os.environ.get("AMLOGIC_TRANSFORMERS_HOST", "0.0.0.0")
+    port = int(os.environ.get("AMLOGIC_TRANSFORMERS_PORT", "8080"))
+    uvicorn.run("amlogic_transformers.server:app", host=host, port=port)

@@ -23,7 +23,7 @@ void usage(const char* program) {
   std::cerr
     << "usage: " << program
     << " --manifest artifact_manifest.json --graph prefill"
-    << " [--adapter libgemma_aml_adapter.so]"
+    << " [--adapter libamlogic_transformers_adapter.so]"
     << " [--atol 0.08] [--rtol 0.08] [--min-cosine 0.98]\n";
 }
 
@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
     const std::string manifest_root = manifest_root_from_path(args.manifest);
 
     std::vector<LoadedTensor> input_storage;
-    std::vector<GemmaTensor> input_tensors;
+    std::vector<AmlogicTransformersTensor> input_tensors;
     for (const auto& ref : graph.inputs) {
       input_storage.push_back(load_npy_tensor(ref.name, join_path(manifest_root, ref.path)));
     }
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
 
     std::vector<LoadedTensor> expected_outputs;
     std::vector<LoadedTensor> actual_outputs;
-    std::vector<GemmaTensor> output_tensors;
+    std::vector<AmlogicTransformersTensor> output_tensors;
     for (const auto& ref : graph.outputs) {
       auto expected = load_npy_tensor(ref.name, join_path(manifest_root, ref.path));
       LoadedTensor actual = expected;
@@ -127,16 +127,16 @@ int main(int argc, char** argv) {
     if (handle == nullptr) {
       throw std::runtime_error(std::string("failed to load adapter: ") + dlerror());
     }
-    auto init = load_symbol<gemma_aml_init_fn>(handle, "gemma_aml_init");
-    auto run = load_symbol<gemma_aml_run_fn>(handle, "gemma_aml_run");
-    auto shutdown = load_symbol<gemma_aml_shutdown_fn>(handle, "gemma_aml_shutdown");
+    auto init = load_symbol<amlogic_transformers_init_fn>(handle, "amlogic_transformers_init");
+    auto run = load_symbol<amlogic_transformers_run_fn>(handle, "amlogic_transformers_run");
+    auto shutdown = load_symbol<amlogic_transformers_shutdown_fn>(handle, "amlogic_transformers_shutdown");
 
     if (init(graph.name.c_str(), graph.nb_path.c_str()) != 0) {
-      throw std::runtime_error("gemma_aml_init failed");
+      throw std::runtime_error("amlogic_transformers_init failed");
     }
     if (run(input_tensors.data(), input_tensors.size(), output_tensors.data(), output_tensors.size()) != 0) {
       shutdown();
-      throw std::runtime_error("gemma_aml_run failed");
+      throw std::runtime_error("amlogic_transformers_run failed");
     }
     shutdown();
     dlclose(handle);

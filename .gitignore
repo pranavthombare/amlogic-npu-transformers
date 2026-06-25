@@ -13,5 +13,5 @@ runtime/build/
 *.nb
 *.so
 libnn_*.so
-libgemma_aml_adapter.so
+libamlogic_transformers_adapter.so
 compile_commands.json

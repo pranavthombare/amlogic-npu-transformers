@@ -1,19 +1,19 @@
 cmake_minimum_required(VERSION 3.16)
-project(gemma_npu_runtime LANGUAGES CXX)
+project(amlogic_transformers_runtime LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(gemma-npu-block-runner
+add_executable(amlogic-transformers-block-runner
   src/main.cpp
   src/block_runner.cpp
 )
 
-target_include_directories(gemma-npu-block-runner PRIVATE include src)
-target_link_libraries(gemma-npu-block-runner PRIVATE dl)
+target_include_directories(amlogic-transformers-block-runner PRIVATE include src)
+target_link_libraries(amlogic-transformers-block-runner PRIVATE dl)
 
-add_library(gemma_reference_adapter SHARED
+add_library(amlogic_transformers_reference_adapter SHARED
   adapters/reference_copy_adapter.cpp
 )
 
-target_include_directories(gemma_reference_adapter PRIVATE include)
+target_include_directories(amlogic_transformers_reference_adapter PRIVATE include)

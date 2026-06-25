@@ -3,7 +3,7 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vim3-gemma-npu"
+name = "amlogic-npu-transformers"
 version = "0.1.0"
 description = "Amlogic NPU inference pipeline for Gemma 3 270M on Khadas VIM3"
 readme = "README.md"
@@ -25,9 +25,9 @@ serve = [
 ]
 
 [project.scripts]
-gemma-npu-export-block = "gemma_npu.export_block:main"
-gemma-npu-convert-acuity = "gemma_npu.convert_acuity:main"
-gemma-npu-server = "gemma_npu.server:main"
+amlogic-transformers-export-block = "amlogic_transformers.export_block:main"
+amlogic-transformers-convert-acuity = "amlogic_transformers.convert_acuity:main"
+amlogic-transformers-server = "amlogic_transformers.server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

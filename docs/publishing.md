@@ -15,6 +15,6 @@ Before pushing publicly:
 Suggested first push:
 
 ```sh
-git remote add origin git@github.com:<owner>/vim3-gemma-npu.git
+git remote add origin git@github.com:<owner>/amlogic-npu-transformers.git
 git push -u origin main
 ```

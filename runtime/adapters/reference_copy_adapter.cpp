@@ -1,13 +1,13 @@
-#include "gemma_npu/adapter_abi.h"
+#include "amlogic_transformers/adapter_abi.h"
 
 #include <cstring>
 
 namespace {
 
-const GemmaTensor* find_source_tensor(
-  const GemmaTensor* inputs,
+const AmlogicTransformersTensor* find_source_tensor(
+  const AmlogicTransformersTensor* inputs,
   size_t input_count,
-  const GemmaTensor& output
+  const AmlogicTransformersTensor& output
 ) {
   for (size_t i = 0; i < input_count; ++i) {
     if (inputs[i].dtype == output.dtype && inputs[i].byte_size == output.byte_size) {
@@ -19,14 +19,14 @@ const GemmaTensor* find_source_tensor(
 
 }  // namespace
 
-extern "C" int gemma_aml_init(const char* graph_name, const char* nb_path) {
+extern "C" int amlogic_transformers_init(const char* graph_name, const char* nb_path) {
   return graph_name != nullptr && nb_path != nullptr ? 0 : -1;
 }
 
-extern "C" int gemma_aml_run(
-  const GemmaTensor* inputs,
+extern "C" int amlogic_transformers_run(
+  const AmlogicTransformersTensor* inputs,
   size_t input_count,
-  GemmaTensor* outputs,
+  AmlogicTransformersTensor* outputs,
   size_t output_count
 ) {
   if (inputs == nullptr || outputs == nullptr || input_count == 0) {
@@ -34,7 +34,7 @@ extern "C" int gemma_aml_run(
   }
 
   for (size_t i = 0; i < output_count; ++i) {
-    const GemmaTensor* source = find_source_tensor(inputs, input_count, outputs[i]);
+    const AmlogicTransformersTensor* source = find_source_tensor(inputs, input_count, outputs[i]);
     if (source == nullptr || outputs[i].data == nullptr || source->data == nullptr) {
       return -2;
     }
@@ -44,4 +44,4 @@ extern "C" int gemma_aml_run(
   return 0;
 }
 
-extern "C" void gemma_aml_shutdown() {}
+extern "C" void amlogic_transformers_shutdown() {}

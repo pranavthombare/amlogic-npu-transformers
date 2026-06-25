@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "gemma_npu/adapter_abi.h"
+#include "amlogic_transformers/adapter_abi.h"
 
 struct LoadedTensor {
   std::string name;
-  int dtype = GEMMA_DTYPE_F32;
+  int dtype = AML_TRANSFORMERS_DTYPE_F32;
   std::vector<int64_t> shape;
   std::vector<uint8_t> bytes;
 };
@@ -37,5 +37,4 @@ struct CompareResult {
 GraphManifest load_graph_manifest(const std::string& manifest_path, const std::string& graph_name);
 LoadedTensor load_npy_tensor(const std::string& name, const std::string& path);
 CompareResult compare_f32(const LoadedTensor& expected, const LoadedTensor& actual);
-GemmaTensor as_abi_tensor(LoadedTensor& tensor);
-
+AmlogicTransformersTensor as_abi_tensor(LoadedTensor& tensor);

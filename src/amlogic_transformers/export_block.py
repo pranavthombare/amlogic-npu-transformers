@@ -6,8 +6,8 @@ import argparse
 from pathlib import Path
 from typing import Any
 
-from gemma_npu.config import PipelineConfig, load_config
-from gemma_npu.manifest import ArtifactManifest, GraphArtifact, TensorInfo, write_manifest
+from amlogic_transformers.config import PipelineConfig, load_config
+from amlogic_transformers.manifest import ArtifactManifest, GraphArtifact, TensorInfo, write_manifest
 
 
 def _import_torch() -> Any:

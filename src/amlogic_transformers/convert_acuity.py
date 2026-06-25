@@ -5,8 +5,8 @@ import argparse
 import subprocess
 from pathlib import Path
 
-from gemma_npu.config import PipelineConfig, load_config
-from gemma_npu.manifest import ArtifactManifest, GraphArtifact, load_manifest, write_manifest
+from amlogic_transformers.config import PipelineConfig, load_config
+from amlogic_transformers.manifest import ArtifactManifest, GraphArtifact, load_manifest, write_manifest
 
 
 def _sdk_root(config: PipelineConfig, sdk_root: Path | None) -> Path:

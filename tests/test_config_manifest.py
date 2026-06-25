@@ -5,9 +5,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from gemma_npu.config import load_config
-from gemma_npu.convert_acuity import convert_graphs
-from gemma_npu.manifest import ArtifactManifest, GraphArtifact, TensorInfo, load_manifest, write_manifest
+from amlogic_transformers.config import load_config
+from amlogic_transformers.convert_acuity import convert_graphs
+from amlogic_transformers.manifest import ArtifactManifest, GraphArtifact, TensorInfo, load_manifest, write_manifest
 
 
 class ConfigManifestTests(unittest.TestCase):
@@ -80,7 +80,7 @@ class ConfigManifestTests(unittest.TestCase):
                             "extra_args": [],
                         },
                         "runtime": {
-                            "adapter_library": "libgemma_aml_adapter.so",
+                            "adapter_library": "libamlogic_transformers_adapter.so",
                             "atol": 0.08,
                             "rtol": 0.08,
                             "min_cosine_similarity": 0.98,

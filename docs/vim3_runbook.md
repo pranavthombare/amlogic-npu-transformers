@@ -45,11 +45,11 @@ generated `libnn_*.so` path discovered under the SDK output directory.
 ## 4. Implement the Amlogic Adapter
 
 Use `runtime/adapters/acuity_shim_template.cpp` as the starting point and expose
-the ABI in `runtime/include/gemma_npu/adapter_abi.h`:
+the ABI in `runtime/include/amlogic_transformers/adapter_abi.h`:
 
-- `gemma_aml_init`
-- `gemma_aml_run`
-- `gemma_aml_shutdown`
+- `amlogic_transformers_init`
+- `amlogic_transformers_run`
+- `amlogic_transformers_shutdown`
 
 The adapter should initialize the generated graph, copy named runner inputs into
 the SDK input tensors, run inference, and copy SDK outputs into the preallocated
@@ -59,10 +59,10 @@ runner output buffers.
 
 ```sh
 make build-runtime
-build/local/gemma-npu-block-runner \
+build/local/amlogic-transformers-block-runner \
   --manifest artifacts/gemma3_270m/block0/artifact_manifest.json \
   --graph prefill \
-  --adapter /path/to/libgemma_aml_adapter.so
+  --adapter /path/to/libamlogic_transformers_adapter.so
 ```
 
 Repeat for `decode`.

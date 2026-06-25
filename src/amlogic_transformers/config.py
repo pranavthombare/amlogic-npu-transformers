@@ -47,7 +47,7 @@ class AcuityConfig:
 
 @dataclass
 class RuntimeConfig:
-    adapter_library: str = "libgemma_aml_adapter.so"
+    adapter_library: str = "libamlogic_transformers_adapter.so"
     atol: float = 0.08
     rtol: float = 0.08
     min_cosine_similarity: float = 0.98

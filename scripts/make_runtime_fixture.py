@@ -6,7 +6,7 @@ import struct
 from dataclasses import asdict
 from pathlib import Path
 
-from gemma_npu.manifest import ArtifactManifest, GraphArtifact, TensorInfo, write_manifest
+from amlogic_transformers.manifest import ArtifactManifest, GraphArtifact, TensorInfo, write_manifest
 
 
 def _shape_literal(shape: tuple[int, ...]) -> str:
@@ -92,7 +92,11 @@ def make_fixture(output: Path, adapter: str) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate a tiny local runtime fixture")
     parser.add_argument("--output", type=Path, required=True, help="Fixture output directory")
-    parser.add_argument("--adapter", default="../libgemma_reference_adapter.so", help="Adapter path stored in manifest")
+    parser.add_argument(
+        "--adapter",
+        default="../libamlogic_transformers_reference_adapter.so",
+        help="Adapter path stored in manifest",
+    )
     args = parser.parse_args()
 
     manifest_path = make_fixture(args.output, args.adapter)

@@ -32,7 +32,7 @@ acuity:
   extra_args: []
 
 runtime:
-  adapter_library: libgemma_aml_adapter.so
+  adapter_library: libamlogic_transformers_adapter.so
   atol: 0.08
   rtol: 0.08
   min_cosine_similarity: 0.98
