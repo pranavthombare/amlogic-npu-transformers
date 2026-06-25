@@ -6,6 +6,9 @@ Transformer inference tooling for Amlogic NPU targets, starting with
 This is not a `llama.cpp`, GGUF, or CPU fallback stack. The runtime boundary is
 the Amlogic NPU SDK.
 
+Conversion is an off-board host step. VIM3 runtime stays native ARM64 and talks
+to the NPU through the Amlogic stack.
+
 ## Status
 
 - Fixed-shape Gemma decoder-block export path.

@@ -3,6 +3,11 @@
 This is the board path for proving `google/gemma-3-270m-it` inference through
 the Amlogic NPU SDK.
 
+Do not run the Acuity converter on the VIM3. The converter is distributed as an
+x86-64 tool and belongs on an x86 development host or CI worker. The VIM3 should
+only receive generated `.nb` files and generated C/runtime files, then run the
+native ARM64 adapter and block runner against `/dev/galcore`.
+
 ## 1. Prepare the Board
 
 Use Khadas Ubuntu BSP for VIM3 and confirm the Amlogic NPU stack is installed.
@@ -17,32 +22,21 @@ python3 -m venv .venv
 pip install -e '.[export,serve]'
 ```
 
-## 2. Export the Decoder Block
+## 2. Export and Convert Off-Board
+
+Run this on an x86 host with the Amlogic SDK and Hugging Face access:
 
 ```sh
 export HF_TOKEN=...
 python scripts/export_gemma_block.py --config configs/gemma3_270m_block.yaml
-```
-
-Expected artifacts:
-
-- `artifacts/gemma3_270m/block0/prefill/prefill.onnx`
-- `artifacts/gemma3_270m/block0/decode/decode.onnx`
-- `artifacts/gemma3_270m/block0/*/reference/*.npy`
-- `artifacts/gemma3_270m/block0/artifact_manifest.json`
-
-## 3. Convert with Acuity
-
-```sh
 export AML_NPU_SDK=/path/to/aml_npu_sdk
 python scripts/convert_acuity.py --config configs/gemma3_270m_block.yaml
 ```
 
-The script writes the Acuity command for each graph into the artifact manifest.
-If conversion succeeds, the manifest should also contain `.nb` paths and the
-generated `libnn_*.so` path discovered under the SDK output directory.
+Copy `artifacts/gemma3_270m/block0` and Acuity-generated source/runtime files
+to the VIM3 after conversion.
 
-## 4. Implement the Amlogic Adapter
+## 3. Implement the Amlogic Adapter on VIM3
 
 Use `runtime/adapters/acuity_shim_template.cpp` as the starting point and expose
 the ABI in `runtime/include/amlogic_transformers/adapter_abi.h`:
@@ -55,7 +49,7 @@ The adapter should initialize the generated graph, copy named runner inputs into
 the SDK input tensors, run inference, and copy SDK outputs into the preallocated
 runner output buffers.
 
-## 5. Check Numerical Drift
+## 4. Check Numerical Drift on VIM3
 
 ```sh
 make build-runtime
